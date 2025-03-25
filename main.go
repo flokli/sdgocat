@@ -72,7 +72,6 @@ func main() {
 			log.Panicf("unable to accept connection: %v", err)
 		}
 
-		net.Dial("tcp", ":5000")
 		outConn, err := net.Dial("tcp", *remoteAddr)
 		if err != nil {
 			log.Panicf("unable to create outgoing connection: %v", err)
@@ -80,11 +79,10 @@ func main() {
 
 		// TODO: maybe we only need to close one side
 		var wg sync.WaitGroup
-		wg.Add(2)
+		wg.Add(1)
 
 		go func() {
 			io.Copy(inConn, outConn)
-			wg.Done()
 		}()
 		go func() {
 			io.Copy(outConn, inConn)
@@ -93,7 +91,7 @@ func main() {
 
 		wg.Wait()
 
-		inConn.Close()
 		outConn.Close()
+		inConn.Close()
 	}
 }
