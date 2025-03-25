@@ -53,6 +53,8 @@ func ActivationListeners() []net.Listener {
 		if pc, err := net.FileListener(f); err == nil {
 			listeners[i] = pc
 			f.Close()
+		} else {
+			os.Exit(1)
 		}
 	}
 	return listeners
